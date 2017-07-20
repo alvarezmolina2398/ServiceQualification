@@ -1,0 +1,94 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 18/07/2017, 09:21:36 AM
+    Author     : Desarrollo
+*/
+
+
+/*general*/
+html,body{
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+.color-blue{
+    background-color: #0264d6  !important;
+}
+.text-white{
+    color: white;
+}
+
+
+#pregunta{
+    color: white;
+    font-size: x-large;
+}
+active{
+    display: inline-block;
+    min-height: 90%;
+}
+.not-active{
+    display: none;
+    min-height: 90%;
+}
+/*encabezado*/
+header{
+    height: 20%;
+    width: 100%;
+}
+
+/*menu principal*/
+main{
+    height: 60%;
+    width: 100%
+}
+main section{
+    height: 100%;
+    width: 100%;
+}
+main section .panel-img #center-img{
+    height: 90%;    
+    width: 100%;
+    min-height: 90%;
+    display: inline-block;
+}
+main section .panel-img #center-img .img{
+    display: inline-block;
+    height: 15%;
+    width: 15%;
+    position: static;
+}
+main section #panel-comentario{
+    height: 10%;
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+main section #panel-comentario form-group #comentario{
+    height: 100%;
+    width: 100%
+}
+/*footer*/
+footer{
+    height: 20%;
+}
+footer #footer-principal{
+    height: 70%;
+    width: 100%;
+    color: #e5e5e5;
+    opacity: 0.98
+        
+}
+footer #footer-principal #logo{
+    margin-top: 2%;
+    height: 70%;
+}
+footer #footer-secundario{
+    height: 30%;
+    width: 100%;
+    color: rgba(255, 255, 255, 0.8);
+}
