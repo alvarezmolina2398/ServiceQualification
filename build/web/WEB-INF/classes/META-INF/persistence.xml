@@ -10,6 +10,18 @@
     <class>com.qualification.modelo.Promocion</class>
     <class>com.qualification.modelo.Cooperativa</class>
     <class>com.qualification.modelo.Asociado</class>
+    <class>com.qualification.controlador.Interrogante</class>
+    <class>com.qualification.controlador.PromocionCooperativa</class>
+    <class>com.qualification.controlador.Cooperativa</class>
+    <class>com.qualification.controlador.Asociado</class>
+    <class>com.qualification.controlador.Agencia</class>
+    <class>com.qualification.controlador.Promocion</class>
+    <class>com.qualification.controlador.Parametro</class>
+    <class>com.qualification.controlador.ParametroInterrogante</class>
+    <class>com.qualification.controlador.Departamento</class>
+    <class>com.qualification.controlador.Usuario</class>
+    <class>com.qualification.modelo.PromocionCooperativa</class>
+    <class>com.qualification.modelo.ParametroInterrogante</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://10.10.10.17:3306/qualification?zeroDateTimeBehavior=convertToNull"/>

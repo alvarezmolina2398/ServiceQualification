@@ -14,9 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -44,11 +41,8 @@ public class Cooperativa implements Serializable {
     @Basic(optional = false)
     @Column(name = "estado")
     private Character estado;
-    @JoinTable(name = "promocion_cooperativa", joinColumns = {
-        @JoinColumn(name = "cooperativa_idcooperativa", referencedColumnName = "idcooperativa")}, inverseJoinColumns = {
-        @JoinColumn(name = "promocion_idpromocion", referencedColumnName = "idpromocion")})
-    @ManyToMany
-    private List<Promocion> promocionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cooperativa")
+    private List<PromocionCooperativa> promocionCooperativaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cooperativaIdcooperativa")
     private List<Agencia> agenciaList;
 
@@ -89,12 +83,12 @@ public class Cooperativa implements Serializable {
         this.estado = estado;
     }
 
-    public List<Promocion> getPromocionList() {
-        return promocionList;
+    public List<PromocionCooperativa> getPromocionCooperativaList() {
+        return promocionCooperativaList;
     }
 
-    public void setPromocionList(List<Promocion> promocionList) {
-        this.promocionList = promocionList;
+    public void setPromocionCooperativaList(List<PromocionCooperativa> promocionCooperativaList) {
+        this.promocionCooperativaList = promocionCooperativaList;
     }
 
     public List<Agencia> getAgenciaList() {

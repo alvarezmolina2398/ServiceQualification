@@ -17,13 +17,6 @@
         <script src="bootstrap/js/bootstrap.js" type="text/javascript"></script>
         <link href="font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
         <link href="css/login.css" rel="stylesheet" type="text/css"/>
-        <script>
-            $(function (){
-               $('#iniciar_sesion').click(function (){
-                   window.location.href = "http://10.10.10.16:8084/ServiceQualification/vista/Principal.jsp";
-               });
-            });
-        </script>
     </head>
     <body>
         <div class="main">
@@ -31,7 +24,7 @@
                 <center>
                     <div class="middle">
                         <div id="login">
-                            <form action="javascript:void(0);" method="get">
+                            <form action="Principal" method="POST">
                                 <fieldset class="clearfix">
                                     <p><span class="fa fa-user"></span><input type="text"  Placeholder="Username" required></p> <!-- JS because of IE support; better: placeholder="Username" -->
                                     <p><span class="fa fa-lock"></span><input type="password"  Placeholder="Password" required></p> <!-- JS because of IE support; better: placeholder="Password" -->

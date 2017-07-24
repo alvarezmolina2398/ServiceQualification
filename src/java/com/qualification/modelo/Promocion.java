@@ -9,14 +9,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -51,8 +52,8 @@ public class Promocion implements Serializable {
     @Basic(optional = false)
     @Column(name = "estado")
     private Character estado;
-    @ManyToMany(mappedBy = "promocionList")
-    private List<Cooperativa> cooperativaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "promocion")
+    private List<PromocionCooperativa> promocionCooperativaList;
 
     public Promocion() {
     }
@@ -109,12 +110,12 @@ public class Promocion implements Serializable {
         this.estado = estado;
     }
 
-    public List<Cooperativa> getCooperativaList() {
-        return cooperativaList;
+    public List<PromocionCooperativa> getPromocionCooperativaList() {
+        return promocionCooperativaList;
     }
 
-    public void setCooperativaList(List<Cooperativa> cooperativaList) {
-        this.cooperativaList = cooperativaList;
+    public void setPromocionCooperativaList(List<PromocionCooperativa> promocionCooperativaList) {
+        this.promocionCooperativaList = promocionCooperativaList;
     }
 
     @Override

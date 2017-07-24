@@ -5,6 +5,7 @@
  */
 package com.qualification.modelo;
 
+import com.qualification.modelo.exceptions.IllegalOrphanException;
 import com.qualification.modelo.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -32,23 +33,28 @@ public class InterroganteJpaController implements Serializable {
     }
 
     public void create(Interrogante interrogante) {
-        if (interrogante.getParametroList() == null) {
-            interrogante.setParametroList(new ArrayList<Parametro>());
+        if (interrogante.getParametroInterroganteList() == null) {
+            interrogante.setParametroInterroganteList(new ArrayList<ParametroInterrogante>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Parametro> attachedParametroList = new ArrayList<Parametro>();
-            for (Parametro parametroListParametroToAttach : interrogante.getParametroList()) {
-                parametroListParametroToAttach = em.getReference(parametroListParametroToAttach.getClass(), parametroListParametroToAttach.getIdparametro());
-                attachedParametroList.add(parametroListParametroToAttach);
+            List<ParametroInterrogante> attachedParametroInterroganteList = new ArrayList<ParametroInterrogante>();
+            for (ParametroInterrogante parametroInterroganteListParametroInterroganteToAttach : interrogante.getParametroInterroganteList()) {
+                parametroInterroganteListParametroInterroganteToAttach = em.getReference(parametroInterroganteListParametroInterroganteToAttach.getClass(), parametroInterroganteListParametroInterroganteToAttach.getParametroInterrogantePK());
+                attachedParametroInterroganteList.add(parametroInterroganteListParametroInterroganteToAttach);
             }
-            interrogante.setParametroList(attachedParametroList);
+            interrogante.setParametroInterroganteList(attachedParametroInterroganteList);
             em.persist(interrogante);
-            for (Parametro parametroListParametro : interrogante.getParametroList()) {
-                parametroListParametro.getInterroganteList().add(interrogante);
-                parametroListParametro = em.merge(parametroListParametro);
+            for (ParametroInterrogante parametroInterroganteListParametroInterrogante : interrogante.getParametroInterroganteList()) {
+                Interrogante oldInterroganteOfParametroInterroganteListParametroInterrogante = parametroInterroganteListParametroInterrogante.getInterrogante();
+                parametroInterroganteListParametroInterrogante.setInterrogante(interrogante);
+                parametroInterroganteListParametroInterrogante = em.merge(parametroInterroganteListParametroInterrogante);
+                if (oldInterroganteOfParametroInterroganteListParametroInterrogante != null) {
+                    oldInterroganteOfParametroInterroganteListParametroInterrogante.getParametroInterroganteList().remove(parametroInterroganteListParametroInterrogante);
+                    oldInterroganteOfParametroInterroganteListParametroInterrogante = em.merge(oldInterroganteOfParametroInterroganteListParametroInterrogante);
+                }
             }
             em.getTransaction().commit();
         } finally {
@@ -58,32 +64,43 @@ public class InterroganteJpaController implements Serializable {
         }
     }
 
-    public void edit(Interrogante interrogante) throws NonexistentEntityException, Exception {
+    public void edit(Interrogante interrogante) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Interrogante persistentInterrogante = em.find(Interrogante.class, interrogante.getIdinterrogante());
-            List<Parametro> parametroListOld = persistentInterrogante.getParametroList();
-            List<Parametro> parametroListNew = interrogante.getParametroList();
-            List<Parametro> attachedParametroListNew = new ArrayList<Parametro>();
-            for (Parametro parametroListNewParametroToAttach : parametroListNew) {
-                parametroListNewParametroToAttach = em.getReference(parametroListNewParametroToAttach.getClass(), parametroListNewParametroToAttach.getIdparametro());
-                attachedParametroListNew.add(parametroListNewParametroToAttach);
-            }
-            parametroListNew = attachedParametroListNew;
-            interrogante.setParametroList(parametroListNew);
-            interrogante = em.merge(interrogante);
-            for (Parametro parametroListOldParametro : parametroListOld) {
-                if (!parametroListNew.contains(parametroListOldParametro)) {
-                    parametroListOldParametro.getInterroganteList().remove(interrogante);
-                    parametroListOldParametro = em.merge(parametroListOldParametro);
+            List<ParametroInterrogante> parametroInterroganteListOld = persistentInterrogante.getParametroInterroganteList();
+            List<ParametroInterrogante> parametroInterroganteListNew = interrogante.getParametroInterroganteList();
+            List<String> illegalOrphanMessages = null;
+            for (ParametroInterrogante parametroInterroganteListOldParametroInterrogante : parametroInterroganteListOld) {
+                if (!parametroInterroganteListNew.contains(parametroInterroganteListOldParametroInterrogante)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ParametroInterrogante " + parametroInterroganteListOldParametroInterrogante + " since its interrogante field is not nullable.");
                 }
             }
-            for (Parametro parametroListNewParametro : parametroListNew) {
-                if (!parametroListOld.contains(parametroListNewParametro)) {
-                    parametroListNewParametro.getInterroganteList().add(interrogante);
-                    parametroListNewParametro = em.merge(parametroListNewParametro);
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<ParametroInterrogante> attachedParametroInterroganteListNew = new ArrayList<ParametroInterrogante>();
+            for (ParametroInterrogante parametroInterroganteListNewParametroInterroganteToAttach : parametroInterroganteListNew) {
+                parametroInterroganteListNewParametroInterroganteToAttach = em.getReference(parametroInterroganteListNewParametroInterroganteToAttach.getClass(), parametroInterroganteListNewParametroInterroganteToAttach.getParametroInterrogantePK());
+                attachedParametroInterroganteListNew.add(parametroInterroganteListNewParametroInterroganteToAttach);
+            }
+            parametroInterroganteListNew = attachedParametroInterroganteListNew;
+            interrogante.setParametroInterroganteList(parametroInterroganteListNew);
+            interrogante = em.merge(interrogante);
+            for (ParametroInterrogante parametroInterroganteListNewParametroInterrogante : parametroInterroganteListNew) {
+                if (!parametroInterroganteListOld.contains(parametroInterroganteListNewParametroInterrogante)) {
+                    Interrogante oldInterroganteOfParametroInterroganteListNewParametroInterrogante = parametroInterroganteListNewParametroInterrogante.getInterrogante();
+                    parametroInterroganteListNewParametroInterrogante.setInterrogante(interrogante);
+                    parametroInterroganteListNewParametroInterrogante = em.merge(parametroInterroganteListNewParametroInterrogante);
+                    if (oldInterroganteOfParametroInterroganteListNewParametroInterrogante != null && !oldInterroganteOfParametroInterroganteListNewParametroInterrogante.equals(interrogante)) {
+                        oldInterroganteOfParametroInterroganteListNewParametroInterrogante.getParametroInterroganteList().remove(parametroInterroganteListNewParametroInterrogante);
+                        oldInterroganteOfParametroInterroganteListNewParametroInterrogante = em.merge(oldInterroganteOfParametroInterroganteListNewParametroInterrogante);
+                    }
                 }
             }
             em.getTransaction().commit();
@@ -103,7 +120,7 @@ public class InterroganteJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -115,10 +132,16 @@ public class InterroganteJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The interrogante with id " + id + " no longer exists.", enfe);
             }
-            List<Parametro> parametroList = interrogante.getParametroList();
-            for (Parametro parametroListParametro : parametroList) {
-                parametroListParametro.getInterroganteList().remove(interrogante);
-                parametroListParametro = em.merge(parametroListParametro);
+            List<String> illegalOrphanMessages = null;
+            List<ParametroInterrogante> parametroInterroganteListOrphanCheck = interrogante.getParametroInterroganteList();
+            for (ParametroInterrogante parametroInterroganteListOrphanCheckParametroInterrogante : parametroInterroganteListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Interrogante (" + interrogante + ") cannot be destroyed since the ParametroInterrogante " + parametroInterroganteListOrphanCheckParametroInterrogante + " in its parametroInterroganteList field has a non-nullable interrogante field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(interrogante);
             em.getTransaction().commit();

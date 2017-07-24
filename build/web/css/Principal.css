@@ -22,6 +22,9 @@ html,body{
     color: white;
 }
 
+.text-name{
+    font-weight: bold;
+}
 
 #pregunta{
     color: white;
@@ -60,6 +63,10 @@ main section .panel-img #center-img .img{
     display: inline-block;
     height: 15%;
     width: 15%;
+}
+main section .panel-img #center-img .img img{
+    height: 100%;
+    width: 100%;
     position: static;
 }
 main section #panel-comentario{

@@ -9,12 +9,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -47,8 +48,8 @@ public class Parametro implements Serializable {
     @Basic(optional = false)
     @Column(name = "estado")
     private Character estado;
-    @ManyToMany(mappedBy = "parametroList")
-    private List<Interrogante> interroganteList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parametro")
+    private List<ParametroInterrogante> parametroInterroganteList;
 
     public Parametro() {
     }
@@ -113,12 +114,12 @@ public class Parametro implements Serializable {
         this.estado = estado;
     }
 
-    public List<Interrogante> getInterroganteList() {
-        return interroganteList;
+    public List<ParametroInterrogante> getParametroInterroganteList() {
+        return parametroInterroganteList;
     }
 
-    public void setInterroganteList(List<Interrogante> interroganteList) {
-        this.interroganteList = interroganteList;
+    public void setParametroInterroganteList(List<ParametroInterrogante> parametroInterroganteList) {
+        this.parametroInterroganteList = parametroInterroganteList;
     }
 
     @Override

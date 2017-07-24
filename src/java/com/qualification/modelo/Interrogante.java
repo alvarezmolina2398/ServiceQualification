@@ -8,16 +8,15 @@ package com.qualification.modelo;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -42,11 +41,8 @@ public class Interrogante implements Serializable {
     @Basic(optional = false)
     @Column(name = "estado")
     private Character estado;
-    @JoinTable(name = "parametro_interrogante", joinColumns = {
-        @JoinColumn(name = "interrogante_idinterrogante", referencedColumnName = "idinterrogante")}, inverseJoinColumns = {
-        @JoinColumn(name = "parametro_idparametro", referencedColumnName = "idparametro")})
-    @ManyToMany
-    private List<Parametro> parametroList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "interrogante")
+    private List<ParametroInterrogante> parametroInterroganteList;
 
     public Interrogante() {
     }
@@ -85,12 +81,12 @@ public class Interrogante implements Serializable {
         this.estado = estado;
     }
 
-    public List<Parametro> getParametroList() {
-        return parametroList;
+    public List<ParametroInterrogante> getParametroInterroganteList() {
+        return parametroInterroganteList;
     }
 
-    public void setParametroList(List<Parametro> parametroList) {
-        this.parametroList = parametroList;
+    public void setParametroInterroganteList(List<ParametroInterrogante> parametroInterroganteList) {
+        this.parametroInterroganteList = parametroInterroganteList;
     }
 
     @Override

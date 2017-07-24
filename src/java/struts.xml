@@ -9,5 +9,13 @@
     </package>
     <package name="com.qualification.controlador" extends="struts-default" namespace="/">
         
+        <!-- 
+            Descripcion: Metodos utilizados para logearse
+            Autor: Jorge Manuel Alvarez Molina
+            Fecha: 2- de julio de 2017
+        -->
+        <action name="Principal" class="com.qualification.controlador.principal" method="execute">
+            <result>/vista/Principal.jsp</result>
+        </action>
     </package>
 </struts>

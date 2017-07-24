@@ -33,8 +33,8 @@ public class CooperativaJpaController implements Serializable {
     }
 
     public void create(Cooperativa cooperativa) {
-        if (cooperativa.getPromocionList() == null) {
-            cooperativa.setPromocionList(new ArrayList<Promocion>());
+        if (cooperativa.getPromocionCooperativaList() == null) {
+            cooperativa.setPromocionCooperativaList(new ArrayList<PromocionCooperativa>());
         }
         if (cooperativa.getAgenciaList() == null) {
             cooperativa.setAgenciaList(new ArrayList<Agencia>());
@@ -43,12 +43,12 @@ public class CooperativaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Promocion> attachedPromocionList = new ArrayList<Promocion>();
-            for (Promocion promocionListPromocionToAttach : cooperativa.getPromocionList()) {
-                promocionListPromocionToAttach = em.getReference(promocionListPromocionToAttach.getClass(), promocionListPromocionToAttach.getIdpromocion());
-                attachedPromocionList.add(promocionListPromocionToAttach);
+            List<PromocionCooperativa> attachedPromocionCooperativaList = new ArrayList<PromocionCooperativa>();
+            for (PromocionCooperativa promocionCooperativaListPromocionCooperativaToAttach : cooperativa.getPromocionCooperativaList()) {
+                promocionCooperativaListPromocionCooperativaToAttach = em.getReference(promocionCooperativaListPromocionCooperativaToAttach.getClass(), promocionCooperativaListPromocionCooperativaToAttach.getPromocionCooperativaPK());
+                attachedPromocionCooperativaList.add(promocionCooperativaListPromocionCooperativaToAttach);
             }
-            cooperativa.setPromocionList(attachedPromocionList);
+            cooperativa.setPromocionCooperativaList(attachedPromocionCooperativaList);
             List<Agencia> attachedAgenciaList = new ArrayList<Agencia>();
             for (Agencia agenciaListAgenciaToAttach : cooperativa.getAgenciaList()) {
                 agenciaListAgenciaToAttach = em.getReference(agenciaListAgenciaToAttach.getClass(), agenciaListAgenciaToAttach.getIdagencia());
@@ -56,9 +56,14 @@ public class CooperativaJpaController implements Serializable {
             }
             cooperativa.setAgenciaList(attachedAgenciaList);
             em.persist(cooperativa);
-            for (Promocion promocionListPromocion : cooperativa.getPromocionList()) {
-                promocionListPromocion.getCooperativaList().add(cooperativa);
-                promocionListPromocion = em.merge(promocionListPromocion);
+            for (PromocionCooperativa promocionCooperativaListPromocionCooperativa : cooperativa.getPromocionCooperativaList()) {
+                Cooperativa oldCooperativaOfPromocionCooperativaListPromocionCooperativa = promocionCooperativaListPromocionCooperativa.getCooperativa();
+                promocionCooperativaListPromocionCooperativa.setCooperativa(cooperativa);
+                promocionCooperativaListPromocionCooperativa = em.merge(promocionCooperativaListPromocionCooperativa);
+                if (oldCooperativaOfPromocionCooperativaListPromocionCooperativa != null) {
+                    oldCooperativaOfPromocionCooperativaListPromocionCooperativa.getPromocionCooperativaList().remove(promocionCooperativaListPromocionCooperativa);
+                    oldCooperativaOfPromocionCooperativaListPromocionCooperativa = em.merge(oldCooperativaOfPromocionCooperativaListPromocionCooperativa);
+                }
             }
             for (Agencia agenciaListAgencia : cooperativa.getAgenciaList()) {
                 Cooperativa oldCooperativaIdcooperativaOfAgenciaListAgencia = agenciaListAgencia.getCooperativaIdcooperativa();
@@ -83,11 +88,19 @@ public class CooperativaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Cooperativa persistentCooperativa = em.find(Cooperativa.class, cooperativa.getIdcooperativa());
-            List<Promocion> promocionListOld = persistentCooperativa.getPromocionList();
-            List<Promocion> promocionListNew = cooperativa.getPromocionList();
+            List<PromocionCooperativa> promocionCooperativaListOld = persistentCooperativa.getPromocionCooperativaList();
+            List<PromocionCooperativa> promocionCooperativaListNew = cooperativa.getPromocionCooperativaList();
             List<Agencia> agenciaListOld = persistentCooperativa.getAgenciaList();
             List<Agencia> agenciaListNew = cooperativa.getAgenciaList();
             List<String> illegalOrphanMessages = null;
+            for (PromocionCooperativa promocionCooperativaListOldPromocionCooperativa : promocionCooperativaListOld) {
+                if (!promocionCooperativaListNew.contains(promocionCooperativaListOldPromocionCooperativa)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain PromocionCooperativa " + promocionCooperativaListOldPromocionCooperativa + " since its cooperativa field is not nullable.");
+                }
+            }
             for (Agencia agenciaListOldAgencia : agenciaListOld) {
                 if (!agenciaListNew.contains(agenciaListOldAgencia)) {
                     if (illegalOrphanMessages == null) {
@@ -99,13 +112,13 @@ public class CooperativaJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Promocion> attachedPromocionListNew = new ArrayList<Promocion>();
-            for (Promocion promocionListNewPromocionToAttach : promocionListNew) {
-                promocionListNewPromocionToAttach = em.getReference(promocionListNewPromocionToAttach.getClass(), promocionListNewPromocionToAttach.getIdpromocion());
-                attachedPromocionListNew.add(promocionListNewPromocionToAttach);
+            List<PromocionCooperativa> attachedPromocionCooperativaListNew = new ArrayList<PromocionCooperativa>();
+            for (PromocionCooperativa promocionCooperativaListNewPromocionCooperativaToAttach : promocionCooperativaListNew) {
+                promocionCooperativaListNewPromocionCooperativaToAttach = em.getReference(promocionCooperativaListNewPromocionCooperativaToAttach.getClass(), promocionCooperativaListNewPromocionCooperativaToAttach.getPromocionCooperativaPK());
+                attachedPromocionCooperativaListNew.add(promocionCooperativaListNewPromocionCooperativaToAttach);
             }
-            promocionListNew = attachedPromocionListNew;
-            cooperativa.setPromocionList(promocionListNew);
+            promocionCooperativaListNew = attachedPromocionCooperativaListNew;
+            cooperativa.setPromocionCooperativaList(promocionCooperativaListNew);
             List<Agencia> attachedAgenciaListNew = new ArrayList<Agencia>();
             for (Agencia agenciaListNewAgenciaToAttach : agenciaListNew) {
                 agenciaListNewAgenciaToAttach = em.getReference(agenciaListNewAgenciaToAttach.getClass(), agenciaListNewAgenciaToAttach.getIdagencia());
@@ -114,16 +127,15 @@ public class CooperativaJpaController implements Serializable {
             agenciaListNew = attachedAgenciaListNew;
             cooperativa.setAgenciaList(agenciaListNew);
             cooperativa = em.merge(cooperativa);
-            for (Promocion promocionListOldPromocion : promocionListOld) {
-                if (!promocionListNew.contains(promocionListOldPromocion)) {
-                    promocionListOldPromocion.getCooperativaList().remove(cooperativa);
-                    promocionListOldPromocion = em.merge(promocionListOldPromocion);
-                }
-            }
-            for (Promocion promocionListNewPromocion : promocionListNew) {
-                if (!promocionListOld.contains(promocionListNewPromocion)) {
-                    promocionListNewPromocion.getCooperativaList().add(cooperativa);
-                    promocionListNewPromocion = em.merge(promocionListNewPromocion);
+            for (PromocionCooperativa promocionCooperativaListNewPromocionCooperativa : promocionCooperativaListNew) {
+                if (!promocionCooperativaListOld.contains(promocionCooperativaListNewPromocionCooperativa)) {
+                    Cooperativa oldCooperativaOfPromocionCooperativaListNewPromocionCooperativa = promocionCooperativaListNewPromocionCooperativa.getCooperativa();
+                    promocionCooperativaListNewPromocionCooperativa.setCooperativa(cooperativa);
+                    promocionCooperativaListNewPromocionCooperativa = em.merge(promocionCooperativaListNewPromocionCooperativa);
+                    if (oldCooperativaOfPromocionCooperativaListNewPromocionCooperativa != null && !oldCooperativaOfPromocionCooperativaListNewPromocionCooperativa.equals(cooperativa)) {
+                        oldCooperativaOfPromocionCooperativaListNewPromocionCooperativa.getPromocionCooperativaList().remove(promocionCooperativaListNewPromocionCooperativa);
+                        oldCooperativaOfPromocionCooperativaListNewPromocionCooperativa = em.merge(oldCooperativaOfPromocionCooperativaListNewPromocionCooperativa);
+                    }
                 }
             }
             for (Agencia agenciaListNewAgencia : agenciaListNew) {
@@ -167,6 +179,13 @@ public class CooperativaJpaController implements Serializable {
                 throw new NonexistentEntityException("The cooperativa with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            List<PromocionCooperativa> promocionCooperativaListOrphanCheck = cooperativa.getPromocionCooperativaList();
+            for (PromocionCooperativa promocionCooperativaListOrphanCheckPromocionCooperativa : promocionCooperativaListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Cooperativa (" + cooperativa + ") cannot be destroyed since the PromocionCooperativa " + promocionCooperativaListOrphanCheckPromocionCooperativa + " in its promocionCooperativaList field has a non-nullable cooperativa field.");
+            }
             List<Agencia> agenciaListOrphanCheck = cooperativa.getAgenciaList();
             for (Agencia agenciaListOrphanCheckAgencia : agenciaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -176,11 +195,6 @@ public class CooperativaJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            List<Promocion> promocionList = cooperativa.getPromocionList();
-            for (Promocion promocionListPromocion : promocionList) {
-                promocionListPromocion.getCooperativaList().remove(cooperativa);
-                promocionListPromocion = em.merge(promocionListPromocion);
             }
             em.remove(cooperativa);
             em.getTransaction().commit();
