@@ -19,22 +19,53 @@
         <link href="font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
         <script>
             $(function (){
+                var datos= [];
+                var totalpreguntas = parseInt($('#totalpreguntas').text());
                 var panel = 0;
+               
+                //envia el numero de pregunta actual
+                
+                $('#numeroPregunta').text(panel+1);
+                
                 $('.img').click(function (){
-                    $('#Panel'+panel).removeClass('active');
-                    $('#Panel'+panel).addClass('not-active');
-                    panel +=1;
-                    $('#Panel'+panel).removeClass('not-active');
-                    $('#Panel'+panel).addClass('active');
-                    $('#pregunta').text($('#pregunta'+panel).text());
+                    
+                    if(panel==0){
+                        $('#depselect').val($(this).find('.value').html());
+                    }
+                    else{
+                        var o = new Object();
+                            o.pregunta = $(this).find('.idinterroganteval').html();
+                            o.parametro =  $(this).find('.value').html();
+                        datos.push(o);
+                    }
+                    
+                    if((panel+1)<totalpreguntas){
+                        $('#Panel'+panel).removeClass('active');
+                        $('#Panel'+panel).addClass('not-active');
+                        panel +=1;
+                        $('#Panel'+panel).removeClass('not-active');
+                        $('#Panel'+panel).addClass('active');
+                        $('#pregunta').text($('#pregunta'+panel).text());
+                        $('#numeroPregunta').text(panel+1);
+                    }
+                    else{
+                        for(var i =0;i<panel;i++){
+                            console.log(datos[i]);
+                        }
+                        
+                    }
                 });
+                
                 $('#BtnAtras').click(function (){
-                    $('#Panel'+panel).removeClass('active');
-                    $('#Panel'+panel).addClass('not-active');
-                    panel -=1;
-                    $('#Panel'+panel).removeClass('not-active');
-                    $('#Panel'+panel).addClass('active');
-                    $('#pregunta').text($('#pregunta'+panel).text());
+                    if(panel>0){
+                        $('#Panel'+panel).removeClass('active');
+                        $('#Panel'+panel).addClass('not-active');
+                        panel -=1;
+                        $('#Panel'+panel).removeClass('not-active');
+                        $('#Panel'+panel).addClass('active');
+                        $('#pregunta').text($('#pregunta'+panel).text());
+                        $('#numeroPregunta').text(panel+1);
+                    }
                 });
             });
         </script>
@@ -51,11 +82,15 @@
                             <a id="pregunta">Selecciona el departamendo donde fue atendido.</a>
                         </center>
                     </div>
+                    <div class="col-md-1">
+                        <h1 class="text-white"><span id="numeroPregunta"></span>/<span id="totalpreguntas"><s:property value="totalpreguntas"/></span></h1>
+                    </div>
                 </div>
             </nav>    
         </header>
         <main>
             <div class="not-active">
+                <input type="hidden" id="depselect">
                 <span id="pregunta0">Selecciona el departamendo donde fue atendido.</span>
                 <s:iterator value="ListQuestions">
                     <span id="pregunta<s:property value="idinterrogante"/>"><s:property value="question"/></span>
@@ -85,6 +120,7 @@
                                         <img  class="selected" src="<s:property value="dirImg"/>" alt="<s:property value="descripcion"/>"/>
                                         <figcaption>
                                             <span class="value"><s:property value="idparametro"/></span>
+                                            <span class="idinterroganteval"><s:property value="idinterrogante"/></span>
                                         </figcaption>
                                     </figure>
                                 </s:iterator>

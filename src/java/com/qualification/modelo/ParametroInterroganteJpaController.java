@@ -7,7 +7,6 @@ package com.qualification.modelo;
 
 import com.qualification.modelo.exceptions.NonexistentEntityException;
 import com.qualification.modelo.exceptions.PreexistingEntityException;
-import com.sun.xml.internal.fastinfoset.util.CharArray;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -36,7 +35,7 @@ public class ParametroInterroganteJpaController implements Serializable {
         if (parametroInterrogante.getParametroInterrogantePK() == null) {
             parametroInterrogante.setParametroInterrogantePK(new ParametroInterrogantePK());
         }
-        char[] paramet;
+        char paramet[];
         paramet = parametroInterrogante.getParametro().getIdparametro().toCharArray();
         parametroInterrogante.getParametroInterrogantePK().setParametroIdparametro(paramet[0]);
         parametroInterrogante.getParametroInterrogantePK().setInterroganteIdinterrogante(parametroInterrogante.getInterrogante().getIdinterrogante());
@@ -77,7 +76,7 @@ public class ParametroInterroganteJpaController implements Serializable {
     }
 
     public void edit(ParametroInterrogante parametroInterrogante) throws NonexistentEntityException, Exception {
-        char[] parameter;
+        char parameter[];
         parameter = parametroInterrogante.getParametro().getIdparametro().toCharArray();
         parametroInterrogante.getParametroInterrogantePK().setParametroIdparametro(parameter[0]);
         parametroInterrogante.getParametroInterrogantePK().setInterroganteIdinterrogante(parametroInterrogante.getInterrogante().getIdinterrogante());

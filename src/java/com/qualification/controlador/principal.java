@@ -12,6 +12,7 @@ import com.qualification.modelo.ListQuestion;
 import com.qualification.modelo.Parametro;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -161,7 +162,6 @@ public class principal extends ActionSupport{
         
     };
     
-    
     /*
     Descripcion:    METODO PARA OBTENER EL TOTAL DE PREGUNTAS
     AUTOR: JORGE MANUEL ALVAREZ MOLINA
@@ -177,7 +177,8 @@ public class principal extends ActionSupport{
             
             Query query = em.createQuery(jpql);
             this.totalpreguntas = Integer.parseInt(query.getSingleResult().toString());
-            
+            //agregamos la pregunta de seleccion de departamento
+            this.totalpreguntas +=1;
             em.close();
             emf.close();
         }catch(Exception e ){

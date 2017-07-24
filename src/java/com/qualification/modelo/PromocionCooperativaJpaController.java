@@ -35,8 +35,8 @@ public class PromocionCooperativaJpaController implements Serializable {
         if (promocionCooperativa.getPromocionCooperativaPK() == null) {
             promocionCooperativa.setPromocionCooperativaPK(new PromocionCooperativaPK());
         }
-        promocionCooperativa.getPromocionCooperativaPK().setPromocionIdpromocion(promocionCooperativa.getPromocion().getIdpromocion());
         promocionCooperativa.getPromocionCooperativaPK().setCooperativaIdcooperativa(promocionCooperativa.getCooperativa().getIdcooperativa());
+        promocionCooperativa.getPromocionCooperativaPK().setPromocionIdpromocion(promocionCooperativa.getPromocion().getIdpromocion());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -74,8 +74,8 @@ public class PromocionCooperativaJpaController implements Serializable {
     }
 
     public void edit(PromocionCooperativa promocionCooperativa) throws NonexistentEntityException, Exception {
-        promocionCooperativa.getPromocionCooperativaPK().setPromocionIdpromocion(promocionCooperativa.getPromocion().getIdpromocion());
         promocionCooperativa.getPromocionCooperativaPK().setCooperativaIdcooperativa(promocionCooperativa.getCooperativa().getIdcooperativa());
+        promocionCooperativa.getPromocionCooperativaPK().setPromocionIdpromocion(promocionCooperativa.getPromocion().getIdpromocion());
         EntityManager em = null;
         try {
             em = getEntityManager();

@@ -11,11 +11,11 @@ import java.util.ArrayList;
  *
  * @author Desarrollo
  */
-public class ListQuestion  {
+public class ListQuestion {
     //declaracion de los campos
     private int idinterrogante;
     private String question;
-    private ArrayList<Parametro> listParametros;
+    private ArrayList<Parametro> ListParametros;
 
     public int getIdinterrogante() {
         return idinterrogante;
@@ -29,17 +29,19 @@ public class ListQuestion  {
         return question;
     }
 
-    public void setQuestion(String quaestion) {
-        this.question = quaestion;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
     public ArrayList<Parametro> getListParametros() {
-        return listParametros;
+        return ListParametros;
     }
 
-    public void setListParametros(ArrayList<Parametro> listParametros) {
-        this.listParametros = listParametros;
+    public void setListParametros(ArrayList<Parametro> ListParametros) {
+        this.ListParametros = ListParametros;
     }
+
+    
     
     
 }
